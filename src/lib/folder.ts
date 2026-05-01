@@ -99,10 +99,7 @@ export async function packAsZip(
   entries: CollectedEntry[],
   zipName: string,
 ): Promise<File> {
-  console.log(
-    `[FOLDER] 📦 zip in: ${entries.length} arquivos → "${zipName}"`,
-    entries.map((e) => e.path),
-  );
+
 
   // client-zip aceita objetos com { name, input, lastModified }
   const inputs = entries.map((e) => ({
@@ -113,7 +110,7 @@ export async function packAsZip(
 
   const zipResponse = downloadZip(inputs);
   const blob = await zipResponse.blob();
-  console.log(`[FOLDER] ✅ zip pronto: ${(blob.size / 1048576).toFixed(2)} MB`);
+
   return new File([blob], zipName, { type: "application/zip" });
 }
 

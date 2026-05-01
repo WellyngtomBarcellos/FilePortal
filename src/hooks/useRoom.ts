@@ -65,35 +65,35 @@ export function useRoom({ userName, roomCode, role }: UseRoomOpts) {
   }, []);
 
   useEffect(() => {
-    console.log(`[ROOM] ▶ init role=${role} room="${roomCode}" user="${userName}"`);
+
     setState("connecting");
     const peer = createPeer({
       roomCode,
       role,
       onOpen: () => {
-        console.log(`[ROOM] ✅ peer aberto (role=${role})`);
+
         if (role === "host") setState("waiting");
       },
       onConnection: (conn) => {
-        console.log("[ROOM] 🔗 conexão estabelecida com peer");
+
         connRef.current = conn;
         setState("connected");
         sendControl(conn, { kind: "hello", name: userName });
 
         conn.on("data", (raw) => handleData(raw));
         conn.on("close", () => {
-          console.log("[ROOM] 🔌 conexão fechada");
+
           setState("idle");
           setPeerName(null);
           toast.error("Conexão encerrada");
         });
         conn.on("error", (err) => {
-          console.error("[ROOM] ❌ erro na conexão:", err);
+
           setState("error");
         });
       },
       onError: (err) => {
-        console.error("[ROOM] ❌ peer error:", err);
+
         const msg = (err as Error).message || "";
         if (msg.includes("ID") && role === "host") {
           toast.error("Esta sala já existe. Tente outro código.");
@@ -105,14 +105,14 @@ export function useRoom({ userName, roomCode, role }: UseRoomOpts) {
         setState("error");
       },
       onDisconnected: () => {
-        console.warn("[ROOM] ⚠ peer desconectado, tentando reconectar...");
+
         peer.reconnect();
       },
     });
     peerRef.current = peer;
 
     return () => {
-      console.log("[ROOM] 🧹 cleanup");
+
       cleanup();
     };
   }, [roomCode, role, userName, cleanup]);
@@ -140,9 +140,9 @@ export function useRoom({ userName, roomCode, role }: UseRoomOpts) {
             : raw instanceof ArrayBuffer
               ? "ArrayBuffer"
               : raw.constructor?.name || "ArrayBufferView";
-        console.log(`[ROOM] 📦 binário recebido tipo=${kind} size=${sz}B`);
+
         if (!receiverRef.current) {
-          console.warn(`[ROOM] ⚠ binário recebido sem receiver ativo (${sz}B)`);
+
         }
         receiverRef.current?.handleBinary(raw);
         return;
@@ -150,11 +150,11 @@ export function useRoom({ userName, roomCode, role }: UseRoomOpts) {
 
       const msg = raw as ControlMessage;
       if (msg.kind !== "ping" && msg.kind !== "pong" && msg.kind !== "progress" && msg.kind !== "chunk-meta") {
-        console.log("[CTRL ◀ recv]", msg);
+
       }
       switch (msg.kind) {
         case "hello":
-          console.log(`[ROOM] 👋 hello de "${msg.name}"`);
+
           setPeerName(msg.name);
           break;
         case "ping":
@@ -164,9 +164,7 @@ export function useRoom({ userName, roomCode, role }: UseRoomOpts) {
           setPing(Math.round(performance.now() - msg.t));
           break;
         case "offer":
-          console.log(
-            `[ROOM] 📨 offer recebido name="${msg.name}" size=${msg.size}B (${(msg.size / 1048576).toFixed(2)} MB)`,
-          );
+
           setIncoming({
             transferId: msg.transferId,
             name: msg.name,
@@ -180,16 +178,16 @@ export function useRoom({ userName, roomCode, role }: UseRoomOpts) {
           } catch {/* noop */}
           break;
         case "accept":
-          console.log("[ROOM] ✅ peer aceitou a transferência");
+
           break;
         case "reject":
-          console.log("[ROOM] ❌ peer recusou a transferência");
+
           toast.error("Transferência recusada");
           setTransfer(null);
           senderRef.current = null;
           break;
         case "cancel":
-          console.log("[ROOM] 🛑 peer cancelou transferência");
+
           toast.warning("Transferência cancelada");
           setIncoming(null);
           if (receiverRef.current) {
@@ -204,7 +202,7 @@ export function useRoom({ userName, roomCode, role }: UseRoomOpts) {
         case "progress":
           break;
         case "complete":
-          console.log("[ROOM] 🏁 sender sinalizou complete");
+
           void receiverRef.current?.markComplete();
           break;
       }

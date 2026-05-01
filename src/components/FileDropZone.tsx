@@ -54,7 +54,7 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
       const entries = await collectFromDataTransfer(e.dataTransfer);
       setEntries(entries);
     } catch (err) {
-      console.error("[DROPZONE] erro ao ler drop:", err);
+
       toast.error("Não foi possível ler os arquivos arrastados");
     }
   };
@@ -75,7 +75,7 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
       if (fileInputRef.current) fileInputRef.current.value = "";
       if (folderInputRef.current) folderInputRef.current.value = "";
     } catch (e) {
-      console.error("[DROPZONE] erro ao empacotar:", e);
+
       toast.error("Falha ao preparar pacote");
     } finally {
       setPacking(false);

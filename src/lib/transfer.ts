@@ -38,9 +38,7 @@ export function uid(): string {
 
 export function sendControl(conn: DataConnection, msg: ControlMessage) {
   // Evita poluir logs com ping/pong (ocorrem a cada 3s)
-  if (msg.kind !== "ping" && msg.kind !== "pong" && msg.kind !== "progress") {
-    console.log("[CTRL ▶ send]", msg);
-  }
+
   conn.send(msg);
 }
 
@@ -72,9 +70,7 @@ export class FileSender {
       let offset = 0;
       let index = 0;
       const startTime = performance.now();
-      console.log(
-        `[SENDER] ▶ start id=${this.transferId} file="${this.file.name}" size=${total}B (${(total / 1048576).toFixed(2)} MB) type=${this.file.type}`,
-      );
+
 
       const stream = this.file.stream() as ReadableStream<Uint8Array>;
       const reader = stream.getReader();
@@ -87,9 +83,7 @@ export class FileSender {
         // PeerJS expõe o RTCDataChannel como `_dc`.
         const dc = (this.conn as unknown as { _dc?: RTCDataChannel })._dc;
         if (dc && dc.bufferedAmount > BUFFER_HIGH_WATERMARK) {
-          console.log(
-            `[SENDER] ⏸ backpressure idx=${index} buffered=${(dc.bufferedAmount / 1048576).toFixed(2)}MB`,
-          );
+
         }
         while (dc && dc.bufferedAmount > BUFFER_HIGH_WATERMARK) {
           await new Promise<void>((resolve) => {
@@ -120,11 +114,7 @@ export class FileSender {
         this.conn.send(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength));
         offset += bytes.byteLength;
         index += 1;
-        if (last || index % 64 === 0) {
-          console.log(
-            `[SENDER] ▶ chunk idx=${index - 1} bytes=${bytes.byteLength} sent=${offset}/${total} (${((offset / total) * 100).toFixed(1)}%)${last ? " LAST" : ""}`,
-          );
-        }
+
         this.hooks.onProgress(offset, total);
       };
 
@@ -154,7 +144,7 @@ export class FileSender {
       if (buffer.byteLength > 0) {
         await flushChunk(buffer, true);
       } else {
-        console.log("[SENDER] ▶ terminator vazio (last=true)");
+
         this.conn.send({
           kind: "chunk-meta",
           transferId: this.transferId,
@@ -166,12 +156,10 @@ export class FileSender {
 
       sendControl(this.conn, { kind: "complete", transferId: this.transferId });
       const elapsed = (performance.now() - startTime) / 1000;
-      console.log(
-        `[SENDER] ✅ done id=${this.transferId} ${index} chunks em ${elapsed.toFixed(2)}s (${(this.file.size / 1048576 / elapsed).toFixed(2)} MB/s)`,
-      );
+
       this.hooks.onDone();
     } catch (e) {
-      console.error("[SENDER] ❌ error", e);
+
       this.hooks.onError(e as Error);
     }
   }
@@ -223,20 +211,15 @@ export class FileReceiver {
   ) {}
 
   async openWriter(handle: FileSystemFileHandle) {
-    console.log(
-      `[RECEIVER] 📂 openWriter file="${this.name}" size=${this.size}B (${(this.size / 1048576).toFixed(2)} MB)`,
-    );
+
     try {
       this.writer = await handle.createWritable({
         keepExistingData: false,
         // @ts-expect-error - 'mode' é suportado em Chromium recentes
         mode: "exclusive",
       });
-      console.log("[RECEIVER] ✅ writer aberto em modo exclusive");
     } catch (e) {
-      console.warn("[RECEIVER] ⚠ exclusive não suportado, fallback:", e);
       this.writer = await handle.createWritable({ keepExistingData: false });
-      console.log("[RECEIVER] ✅ writer aberto em modo padrão");
     }
   }
 
@@ -245,16 +228,12 @@ export class FileReceiver {
   }
 
   async markComplete() {
-    console.log(
-      `[RECEIVER] 🏁 markComplete received=${this.received}/${this.size} finalized=${this.finalized}`,
-    );
+
     this.gotCompleteSignal = true;
     if (this.received >= this.size) {
       await this.finalize();
     } else {
-      console.warn(
-        `[RECEIVER] ⚠ complete recebido antes de todos os bytes (faltam ${this.size - this.received}B)`,
-      );
+
     }
   }
 
@@ -272,40 +251,29 @@ export class FileReceiver {
     const writer = this.writer;
     const position = this.writtenToDisk;
     this.writtenToDisk += merged.byteLength;
-    console.log(
-      `[RECEIVER] 💾 flush ${(flushBytes / 1024).toFixed(0)}KB @pos=${position} total-na-disk=${this.writtenToDisk}`,
-    );
+
     this.writeChain = this.writeChain
       .then(() => writer.write({ type: "write", position, data: merged }))
       .catch((e) => {
-        console.error("[RECEIVER] ❌ writer.write erro:", e);
         throw e;
       });
   }
 
   private async finalize() {
     if (!this.writer || this.finalized) {
-      console.log(
-        `[RECEIVER] finalize ignorado writer=${!!this.writer} finalized=${this.finalized}`,
-      );
+
       return;
     }
     this.finalized = true;
-    console.log(
-      `[RECEIVER] 🏁 finalize start received=${this.received} writtenToDisk=${this.writtenToDisk} queue=${this.writeQueueBytes}`,
-    );
+
     this.flushQueue();
     try {
       await this.writeChain;
-      console.log("[RECEIVER] ✅ writeChain drenado");
     } catch (e) {
-      console.error("[RECEIVER] ❌ erro no writeChain:", e);
     }
     const t0 = performance.now();
     await this.writer.close();
-    console.log(
-      `[RECEIVER] ✅ writer.close() concluído em ${(performance.now() - t0).toFixed(0)}ms`,
-    );
+
     this.writer = null;
     this.hooks.onDone();
   }
@@ -317,7 +285,7 @@ export class FileReceiver {
       const meta = this.pendingMeta;
       this.pendingMeta = null;
       if (!meta) {
-        console.error("[RECEIVER] ❌ chunk binário sem chunk-meta!");
+
         throw new Error("Chunk recebido sem metadados");
       }
 
@@ -338,11 +306,6 @@ export class FileReceiver {
       }
 
       const isLast = meta.last;
-      if (isLast || meta.index % 64 === 0) {
-        console.log(
-          `[RECEIVER] ◀ chunk idx=${meta.index} bytes=${buf.byteLength} recv=${this.received}/${this.size} (${((this.received / this.size) * 100).toFixed(1)}%)${isLast ? " LAST" : ""}`,
-        );
-      }
 
       const now = performance.now();
       if (now - this.lastProgressEmit > 100 || isLast) {
@@ -356,24 +319,22 @@ export class FileReceiver {
       }
 
       if (isLast || (this.gotCompleteSignal && this.received >= this.size)) {
-        console.log(
-          `[RECEIVER] 🎯 condição finalização: isLast=${isLast} gotComplete=${this.gotCompleteSignal} received=${this.received}/${this.size}`,
-        );
+
         await this.finalize();
       }
     } catch (e) {
-      console.error("[RECEIVER] ❌ handleBinary erro:", e);
+
       this.hooks.onError(e as Error);
     }
   }
 
   async cancel() {
-    console.log(`[RECEIVER] 🛑 cancel id=${this.transferId}`);
+
     this.cancelled = true;
     try {
       await this.writer?.abort();
     } catch (e) {
-      console.warn("[RECEIVER] ⚠ writer.abort falhou:", e);
+
     }
     this.writer = null;
     this.hooks.onCancel();
