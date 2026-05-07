@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  FilePortal:
+  AirNoctise:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: FilePortal-app
+    container_name: AirNoctise-app
     ports:
       - "8009:8009"
     restart: unless-stopped

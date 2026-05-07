@@ -48,10 +48,7 @@ export function Lobby({ onJoin }: LobbyProps) {
         {/* Left Side: Brand & Intro */}
         <header className="text-center lg:text-left space-y-6">
           <div className="flex flex-col lg:flex-row items-center gap-6 justify-center lg:justify-start">
-            <img src="/assets/logo.png" alt="FilePortal Logo" className="h-16 md:h-20 w-auto object-contain drop-shadow-xl" />
-            <h1 className="text-[4rem] md:text-[5rem] leading-[1.1] font-bold tracking-tighter text-[#E5E5E5]">
-              FilePortal
-            </h1>
+            <img src="/assets/logo.png" alt="AirNoctise Logo" className="h-16 md:h-24 w-auto object-contain drop-shadow-xl" />
           </div>
           <p className="text-[#8B92A5] text-lg md:text-xl font-medium max-w-lg mx-auto lg:mx-0 leading-relaxed">
             Compartilhe arquivos de qualquer tamanho diretamente entre dispositivos, de forma instantânea e totalmente segura.
@@ -114,9 +111,9 @@ export function Lobby({ onJoin }: LobbyProps) {
         {/* Section 1: Features Grid */}
         <section className="space-y-12">
           <div className="text-center space-y-4">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Como o FilePortal funciona?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Como o AirNoctise funciona?</h2>
             <p className="text-[#8B92A5] text-lg max-w-2xl mx-auto">
-              Diferente de serviços como Google Drive ou WeTransfer, o FilePortal <strong className="text-white font-semibold">não faz upload</strong> dos seus arquivos para nenhum servidor na nuvem.
+              Diferente de serviços como Google Drive ou WeTransfer, o AirNoctise <strong className="text-white font-semibold">não faz upload</strong> dos seus arquivos para nenhum servidor na nuvem.
             </p>
           </div>
 
@@ -162,7 +159,7 @@ export function Lobby({ onJoin }: LobbyProps) {
             </div>
             <h2 className="text-3xl font-bold tracking-tight mb-4">Software Livre e Transparente</h2>
             <p className="text-[#8B92A5] text-lg mb-8 leading-relaxed">
-              Acreditamos na transparência. O FilePortal é um projeto de código aberto, o que significa que qualquer pessoa pode auditar o código para garantir que ele é seguro e livre de rastreadores.
+              Acreditamos na transparência. O AirNoctise é um projeto de código aberto, o que significa que qualquer pessoa pode auditar o código para garantir que ele é seguro e livre de rastreadores.
             </p>
             <a 
               href="https://github.com" 
