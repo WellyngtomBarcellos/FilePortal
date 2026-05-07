@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  heimdall:
+  FilePortal:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: heimdall-app
+    container_name: FilePortal-app
     ports:
       - "8009:8009"
     restart: unless-stopped

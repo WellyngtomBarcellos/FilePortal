@@ -40,6 +40,7 @@
 
     --gradient-primary: linear-gradient(135deg, hsl(252 87% 67%), hsl(270 90% 72%));
     --gradient-accent: linear-gradient(135deg, hsl(252 87% 67%), hsl(195 90% 60%));
+    
     --gradient-bg: radial-gradient(1200px 600px at 10% -10%, hsl(252 87% 67% / 0.18), transparent 60%),
                    radial-gradient(900px 500px at 110% 10%, hsl(195 90% 60% / 0.15), transparent 60%),
                    radial-gradient(800px 600px at 50% 120%, hsl(270 90% 72% / 0.12), transparent 60%);

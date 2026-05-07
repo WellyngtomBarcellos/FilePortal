@@ -1,6 +1,6 @@
 <div align="center">
   <img src="https://ambarks.com/assets/image/ambarks/withe-logotipo.png" alt="Ambarks Studios Logo" height="80" style="margin-bottom: 20px" />
-  <h1>Heimdall</h1>
+  <h1>FilePortal</h1>
   <p><strong>Transferência de Arquivos P2P Rápida, Segura e Sem Limites</strong></p>
   <p><i>Um projeto orgulhosamente desenvolvido e desenhado por <b>Ambarks Studios</b>.</i></p>
   <br />
@@ -8,7 +8,7 @@
 
 ## 📖 Sobre o Projeto
 
-O **Heimdall** é uma solução leve e inteligente para quem precisa enviar arquivos diretamente para outra pessoa de forma instantânea. 
+O **FilePortal** é uma solução leve e inteligente para quem precisa enviar arquivos diretamente para outra pessoa de forma instantânea. 
 
 Criado como um projeto simples e ultra-eficiente pela equipe da **Ambarks Studios**, ele elimina totalmente a necessidade de fazer uploads demorados para servidores na nuvem. A transferência acontece "Ponto a Ponto" (P2P), ligando o seu navegador diretamente ao navegador do destinatário usando o máximo de banda da sua conexão com a internet.
 
