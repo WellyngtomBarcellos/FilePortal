@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { Upload, FileIcon, FolderIcon, Loader2, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Upload, FileIcon, FolderIcon, Loader2, X, Sparkles } from "lucide-react";
 import { formatBytes } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import {
@@ -54,7 +53,6 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
       const entries = await collectFromDataTransfer(e.dataTransfer);
       setEntries(entries);
     } catch (err) {
-
       toast.error("Não foi possível ler os arquivos arrastados");
     }
   };
@@ -75,7 +73,6 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
       if (fileInputRef.current) fileInputRef.current.value = "";
       if (folderInputRef.current) folderInputRef.current.value = "";
     } catch (e) {
-
       toast.error("Falha ao preparar pacote");
     } finally {
       setPacking(false);
@@ -85,7 +82,7 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
   const fileCount = picked?.entries.length ?? 0;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -94,10 +91,10 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
         className={cn(
-          "block rounded-[2rem] border-2 border-dashed p-10 text-center transition-all",
-          "border-white/[0.08] bg-white/[0.02]",
-          !disabled && "hover:bg-white/[0.04]",
-          dragOver && "border-[#3B6BEA] bg-[#3B6BEA]/10 scale-[1.01]",
+          "block rounded-[2.5rem] border-2 border-dashed p-12 text-center transition-all",
+          "border-slate-200 bg-white/50 backdrop-blur-sm",
+          !disabled && "hover:bg-white/80 hover:border-primary/50 cursor-pointer group",
+          dragOver && "border-primary bg-primary/5 scale-[1.01] shadow-2xl shadow-primary/10",
           disabled && "opacity-50 cursor-not-allowed",
         )}
       >
@@ -121,44 +118,42 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
           onChange={(e) => setEntries(collectFromFileList(e.target.files ?? new FileList()))}
         />
 
-        <div className="flex flex-col items-center gap-4 text-[#8B92A5]">
+        <div className="flex flex-col items-center gap-4 text-slate-400">
           {picked ? (
             <>
-              {picked.isFolder ? (
-                <div className="p-4 bg-[#1A2542] rounded-2xl border border-[#3B6BEA]/20">
-                  <FolderIcon className="h-10 w-10 text-[#3B6BEA]" />
-                </div>
-              ) : (
-                <div className="p-4 bg-[#1A2542] rounded-2xl border border-[#3B6BEA]/20">
-                  <FileIcon className="h-10 w-10 text-[#3B6BEA]" />
-                </div>
-              )}
-              <div className="text-white font-semibold text-lg break-all max-w-full">
+              <div className="p-5 bg-blue-50 rounded-3xl border border-blue-100 shadow-sm">
+                {picked.isFolder ? (
+                  <FolderIcon className="h-10 w-10 text-primary" />
+                ) : (
+                  <FileIcon className="h-10 w-10 text-primary" />
+                )}
+              </div>
+              <div className="text-slate-900 font-bold text-xl break-all max-w-full">
                 {picked.isFolder
-                  ? `${fileCount} arquivo${fileCount > 1 ? "s" : ""} • será enviado como ${picked.zipName}`
+                  ? `${fileCount} arquivo${fileCount > 1 ? "s" : ""} • Pacote ZIP`
                   : picked.entries[0].file.name}
               </div>
-              <div className="text-sm font-medium text-[#5C6479] bg-white/5 px-3 py-1 rounded-full">{formatBytes(picked.totalBytes)}</div>
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-4 py-1.5 rounded-full border border-slate-200">{formatBytes(picked.totalBytes)}</div>
               <button
                 onClick={(e) => {
                   e.preventDefault();
                   setPicked(null);
                 }}
                 disabled={packing}
-                className="mt-2 flex items-center justify-center gap-1.5 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-400/10 px-4 py-2 rounded-xl transition-colors disabled:opacity-50"
+                className="mt-2 flex items-center justify-center gap-2 text-xs font-bold text-red-500 hover:bg-red-50 px-5 py-2.5 rounded-full transition-all disabled:opacity-50"
               >
                 <X className="h-4 w-4" /> Remover seleção
               </button>
             </>
           ) : (
             <>
-              <div className="p-4 bg-white/[0.03] rounded-2xl border border-white/[0.05] mb-2">
-                <Upload className="h-10 w-10 text-[#5C6479]" />
+              <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 mb-2 group-hover:scale-110 transition-transform shadow-sm">
+                <Upload className="h-10 w-10 text-slate-300 group-hover:text-primary transition-colors" />
               </div>
-              <div className="text-white font-semibold text-lg">
-                Arraste arquivos ou pastas aqui
+              <div className="text-slate-900 font-bold text-xl">
+                Arraste arquivos ou pastas
               </div>
-              <div className="text-sm font-medium text-[#5C6479]">ou use os botões abaixo para selecionar</div>
+              <div className="text-sm font-semibold text-slate-400">ou use os botões abaixo</div>
             </>
           )}
         </div>
@@ -170,34 +165,35 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
             type="button"
             disabled={disabled}
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center justify-center gap-2 h-14 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-semibold transition-colors border border-white/[0.05] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 h-16 rounded-[1.8rem] bg-white hover:bg-slate-50 text-slate-600 font-bold transition-all border border-slate-200 shadow-sm active:scale-95 disabled:opacity-50"
           >
-            <FileIcon className="h-5 w-5 text-[#8B92A5]" /> Escolher arquivos
+            <FileIcon className="h-5 w-5 text-slate-400" /> Arquivos
           </button>
           <button
             type="button"
             disabled={disabled}
             onClick={() => folderInputRef.current?.click()}
-            className="flex items-center justify-center gap-2 h-14 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-semibold transition-colors border border-white/[0.05] disabled:opacity-50"
+            className="flex items-center justify-center gap-2 h-16 rounded-[1.8rem] bg-white hover:bg-slate-50 text-slate-600 font-bold transition-all border border-slate-200 shadow-sm active:scale-95 disabled:opacity-50"
           >
-            <FolderIcon className="h-5 w-5 text-[#8B92A5]" /> Escolher pasta
+            <FolderIcon className="h-5 w-5 text-slate-400" /> Pastas
           </button>
         </div>
       )}
 
       <button
-        className="flex items-center justify-center gap-2 w-full h-16 rounded-2xl bg-[#3B6BEA] hover:bg-[#3B6BEA]/90 text-white font-bold text-lg shadow-lg shadow-[#3B6BEA]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center justify-center gap-3 w-full h-20 rounded-[2rem] bg-slate-900 hover:bg-slate-800 text-white font-bold text-lg shadow-xl active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
         disabled={!picked || disabled || packing}
         onClick={handleSend}
       >
         {packing ? (
           <>
-            <Loader2 className="h-5 w-5 animate-spin" /> Compactando para envio...
+            <Loader2 className="h-6 w-6 animate-spin" /> Compactando...
           </>
-        ) : picked?.isFolder ? (
-          "Compactar e Enviar Pasta"
         ) : (
-          "Enviar Arquivo"
+          <>
+            <Upload size={20} />
+            {picked?.isFolder ? "Compactar e Enviar" : "Enviar Agora"}
+          </>
         )}
       </button>
     </div>

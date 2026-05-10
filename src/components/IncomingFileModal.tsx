@@ -13,52 +13,50 @@ interface IncomingFileModalProps {
 export function IncomingFileModal({ offer, fromName, onAccept, onReject }: IncomingFileModalProps) {
   return (
     <Dialog open={!!offer} onOpenChange={(o) => { if (!o && offer) onReject(offer); }}>
-      <DialogContent className="bg-[#1A1D24] border border-white/[0.05] shadow-2xl shadow-black text-white sm:rounded-[2.5rem] p-8 max-w-sm overflow-hidden">
-        <DialogHeader className="space-y-3 relative z-10">
-          <div className="w-16 h-16 bg-[#1A2542] rounded-2xl border border-[#3B6BEA]/20 flex items-center justify-center mb-2 mx-auto">
-            <Download className="text-[#3B6BEA] h-8 w-8" />
+      <DialogContent className="bg-white border-none shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] rounded-[3rem] p-8 md:p-12 max-w-[450px] overflow-hidden !outline-none">
+        <DialogHeader className="space-y-6 relative z-10 mb-2">
+          <div className="w-24 h-24 bg-blue-50 rounded-[2.5rem] border border-blue-100 flex items-center justify-center mx-auto shadow-sm">
+            <Download className="text-primary h-12 w-12" />
           </div>
-          <DialogTitle className="text-2xl font-bold tracking-tight text-center">Arquivo Recebido</DialogTitle>
-          <DialogDescription className="text-center text-[#8B92A5] text-base">
-            <span className="font-semibold text-white">{fromName}</span> quer te enviar um arquivo
-          </DialogDescription>
+          <div className="space-y-2">
+            <DialogTitle className="text-4xl font-bold tracking-tight text-center text-slate-900 hero-text">Arquivo Disponível</DialogTitle>
+            <DialogDescription className="text-center text-slate-500 text-lg font-medium leading-tight">
+              <span className="font-bold text-slate-900">{fromName}</span> está enviando um arquivo para você
+            </DialogDescription>
+          </div>
         </DialogHeader>
 
         {offer && (
-          <div className="space-y-6 pt-4 relative z-10">
-            <div className="flex items-center gap-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] p-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] bg-white/5">
-                <FileIcon className="h-6 w-6 text-[#8B92A5]" />
+          <div className="space-y-10 pt-4 relative z-10">
+            <div className="flex items-center gap-5 rounded-[2.5rem] bg-slate-50 border border-slate-100 p-6 shadow-inner">
+              <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-white border border-slate-100 shadow-sm shrink-0">
+                <FileIcon className="h-8 w-8 text-primary" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="truncate font-semibold text-white">{offer.name}</div>
-                <div className="text-sm font-medium text-[#5C6479]">{formatBytes(offer.size)}</div>
+                <div className="truncate font-bold text-slate-900 text-xl tracking-tight">{offer.name}</div>
+                <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mt-1">{formatBytes(offer.size)}</div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <button 
-                onClick={() => onReject(offer)}
-                className="flex items-center justify-center gap-2 h-14 rounded-2xl bg-white/5 hover:bg-white/10 text-[#8B92A5] hover:text-white font-semibold transition-colors border border-white/[0.05]"
-              >
-                <X className="h-4 w-4" /> Recusar
-              </button>
+            <div className="flex flex-col gap-3">
               <button 
                 onClick={() => onAccept(offer)}
-                className="flex items-center justify-center gap-2 h-14 rounded-2xl bg-[#3B6BEA] hover:bg-[#3B6BEA]/90 text-white font-semibold shadow-lg shadow-[#3B6BEA]/25 transition-all"
+                className="flex items-center justify-center gap-3 w-full h-20 rounded-[2rem] bg-slate-900 hover:bg-slate-800 text-white font-bold text-lg shadow-2xl active:scale-95 transition-all"
               >
-                <Check className="h-4 w-4" /> Aceitar
+                <Check size={20} /> Aceitar e Baixar
+              </button>
+              <button 
+                onClick={() => onReject(offer)}
+                className="flex items-center justify-center gap-2 w-full h-14 rounded-full text-slate-400 hover:text-slate-600 font-bold text-sm transition-all hover:bg-slate-50 active:scale-95"
+              >
+                <X size={16} /> Recusar arquivo
               </button>
             </div>
-            <p className="text-xs font-medium text-[#5C6479] text-center">
-              Você poderá escolher onde salvar
-            </p>
           </div>
         )}
-
-        {/* Faded Background Icon */}
-        <Download className="absolute -right-12 -bottom-12 text-white/[0.02] w-64 h-64 pointer-events-none -rotate-12" />
       </DialogContent>
     </Dialog>
   );
 }
+
+
