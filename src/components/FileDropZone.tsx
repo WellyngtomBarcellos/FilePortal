@@ -92,9 +92,9 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
         onDrop={onDrop}
         className={cn(
           "block rounded-[2.5rem] border-2 border-dashed p-12 text-center transition-all",
-          "border-slate-200 bg-white/50 backdrop-blur-sm",
-          !disabled && "hover:bg-white/80 hover:border-primary/50 cursor-pointer group",
-          dragOver && "border-primary bg-primary/5 scale-[1.01] shadow-2xl shadow-primary/10",
+          "border-white/10 bg-white/5 backdrop-blur-sm",
+          !disabled && "hover:bg-white/10 hover:border-primary/50 cursor-pointer group",
+          dragOver && "border-primary bg-primary/10 scale-[1.01] shadow-2xl shadow-primary/10",
           disabled && "opacity-50 cursor-not-allowed",
         )}
       >
@@ -118,42 +118,42 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
           onChange={(e) => setEntries(collectFromFileList(e.target.files ?? new FileList()))}
         />
 
-        <div className="flex flex-col items-center gap-4 text-slate-400">
+        <div className="flex flex-col items-center gap-4 text-white/40">
           {picked ? (
             <>
-              <div className="p-5 bg-blue-50 rounded-3xl border border-blue-100 shadow-sm">
+              <div className="p-5 bg-primary/10 rounded-3xl border border-primary/20 shadow-sm">
                 {picked.isFolder ? (
                   <FolderIcon className="h-10 w-10 text-primary" />
                 ) : (
                   <FileIcon className="h-10 w-10 text-primary" />
                 )}
               </div>
-              <div className="text-slate-900 font-bold text-xl break-all max-w-full">
+              <div className="text-white font-bold text-xl break-all max-w-full">
                 {picked.isFolder
                   ? `${fileCount} arquivo${fileCount > 1 ? "s" : ""} • Pacote ZIP`
                   : picked.entries[0].file.name}
               </div>
-              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-4 py-1.5 rounded-full border border-slate-200">{formatBytes(picked.totalBytes)}</div>
+              <div className="text-[10px] font-bold text-white/40 uppercase tracking-widest bg-white/10 px-4 py-1.5 rounded-full border border-white/10">{formatBytes(picked.totalBytes)}</div>
               <button
                 onClick={(e) => {
                   e.preventDefault();
                   setPicked(null);
                 }}
                 disabled={packing}
-                className="mt-2 flex items-center justify-center gap-2 text-xs font-bold text-red-500 hover:bg-red-50 px-5 py-2.5 rounded-full transition-all disabled:opacity-50"
+                className="mt-2 flex items-center justify-center gap-2 text-xs font-bold text-red-400 hover:bg-red-500/10 px-5 py-2.5 rounded-full transition-all disabled:opacity-50"
               >
                 <X className="h-4 w-4" /> Remover seleção
               </button>
             </>
           ) : (
             <>
-              <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 mb-2 group-hover:scale-110 transition-transform shadow-sm">
-                <Upload className="h-10 w-10 text-slate-300 group-hover:text-primary transition-colors" />
+              <div className="p-6 bg-white/5 rounded-3xl border border-white/10 mb-2 group-hover:scale-110 transition-transform shadow-sm">
+                <Upload className="h-10 w-10 text-white/20 group-hover:text-primary transition-colors" />
               </div>
-              <div className="text-slate-900 font-bold text-xl">
+              <div className="text-white font-bold text-xl">
                 Arraste arquivos ou pastas
               </div>
-              <div className="text-sm font-semibold text-slate-400">ou use os botões abaixo</div>
+              <div className="text-sm font-semibold text-white/20">ou use os botões abaixo</div>
             </>
           )}
         </div>
@@ -165,23 +165,23 @@ export function FileDropZone({ onFile, disabled }: FileDropZoneProps) {
             type="button"
             disabled={disabled}
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center justify-center gap-2 h-16 rounded-[1.8rem] bg-white hover:bg-slate-50 text-slate-600 font-bold transition-all border border-slate-200 shadow-sm active:scale-95 disabled:opacity-50"
+            className="flex items-center justify-center gap-2 h-16 rounded-[1.8rem] bg-white/5 hover:bg-white/10 text-white/60 font-bold transition-all border border-white/10 shadow-sm active:scale-95 disabled:opacity-50"
           >
-            <FileIcon className="h-5 w-5 text-slate-400" /> Arquivos
+            <FileIcon className="h-5 w-5 text-white/40" /> Arquivos
           </button>
           <button
             type="button"
             disabled={disabled}
             onClick={() => folderInputRef.current?.click()}
-            className="flex items-center justify-center gap-2 h-16 rounded-[1.8rem] bg-white hover:bg-slate-50 text-slate-600 font-bold transition-all border border-slate-200 shadow-sm active:scale-95 disabled:opacity-50"
+            className="flex items-center justify-center gap-2 h-16 rounded-[1.8rem] bg-white/5 hover:bg-white/10 text-white/60 font-bold transition-all border border-white/10 shadow-sm active:scale-95 disabled:opacity-50"
           >
-            <FolderIcon className="h-5 w-5 text-slate-400" /> Pastas
+            <FolderIcon className="h-5 w-5 text-white/40" /> Pastas
           </button>
         </div>
       )}
 
       <button
-        className="flex items-center justify-center gap-3 w-full h-20 rounded-[2rem] bg-slate-900 hover:bg-slate-800 text-white font-bold text-lg shadow-xl active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+        className="flex items-center justify-center gap-3 w-full h-20 rounded-[2rem] bg-white hover:bg-white/90 text-slate-900 font-bold text-lg shadow-xl active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
         disabled={!picked || disabled || packing}
         onClick={handleSend}
       >
